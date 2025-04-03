@@ -86,8 +86,7 @@ $form.addEventListener("submit", function (e) {
 
     // O fluxo de 'criar' poderia ser mais legivel
     if (action === "create") {
-      const id = Date.now();
-      const status = false;
+
 
       // refatorado com a função validate
       if (!validateEmptyField($input)) {  
@@ -98,7 +97,7 @@ $form.addEventListener("submit", function (e) {
         validateEmptyField($input) 
       });
 
-      hadleCreateTask($input.value, id, status, $priority.value);
+      handleCreateTask({ task: $input.value, priority: $priority.value});
 
     } 
     // Aqui poderia ser mais legivel e organizado também.
@@ -128,14 +127,20 @@ $form.addEventListener("submit", function (e) {
 
 // Aqui, conforme vou incluindo novas informações a task, vão ficando muitos parametros passados para a função
 
-function hadleCreateTask(task, id, status, priority) {
+function handleCreateTask(taskData) {
+  addTaskToList({
+    ...taskData, 
+    id: Date.now(), 
+    status: false, 
+    date: new Date().toLocaleDateString()
+  });
 
-  // Aqui também, muita coisa sendo passada
-  tasks.push({ task, id, status, date: new Date().toLocaleDateString(), priority });
-
-  // Esse codigo também se repete
   saveTasksToLocalStorage();
   renderTaskList(tasks);
+}
+
+function addTaskToList(task) {
+  tasks.push(task)
 }
 
 
