@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To Do List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Hello!</h1>
+
+      <div class="header">
+        <div class="filters">
+          <button data-filter="all" class="active">All</button>
+          <button data-filter="completed">Completed</button>
+          <button data-filter="pending">Pending</button>
+        </div>
+
+        <button class="btn-modal" id="btn-open-modal">+</button>
+      </div>
+
+      <ul class="list" id="tasks-list"></ul>
+    </div>
+
+    <div id="modal-create" class="modal">
+
+      <div class="modal-content">
+        <span id="close" class="close">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </span>
+        <form action="" id="tasks-form">
+          <h2 class="modal-title">New task</h2>
+            <input type="hidden" name="task-id">
+            <input
+              type="text"
+              id="task"
+              name="task"
+              placeholder="Task title"
+            />
+            <select name="priority" id="priority">
+              <option value="">Priority</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+            <button class="btn-create" id="btn-save" type="submit" data-action="create">Save</button>
+        </form>
+      </div>
+    
+    </div>
+
+    <script src="/assets/js/script.js"></script>
+  </body>
+</html>
