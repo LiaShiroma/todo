@@ -102,11 +102,11 @@ form {
   display: none;
 }
 
-input.error {
+input.error, select.error {
   border-color: #f26e54;
 }
 
-input.error + .error-message {
+.error + .error-message {
   display: block;
   color: #f26e54;
   font-size: 12px;

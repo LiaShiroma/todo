@@ -48,12 +48,15 @@
             <input type="text" id="task" name="task" placeholder="Task title" />
             <span class="error-message">Campo obrigatório*</span>
           </div>
-          <select name="priority" id="priority" required>
-            <option value="" disabled selected>Priority</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
+          <div class="input-container">
+            <select name="priority" id="priority">
+              <option value="" disabled selected>Priority</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+            <span class="error-message">Campo obrigatório*</span>
+          </div>
           <button
             class="btn-create"
             id="btn-save"

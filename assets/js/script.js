@@ -38,10 +38,21 @@ $form.addEventListener("submit", function (e) {
   if (!action) {
     return;
   }
+
+  let isValid = true;
+
   if (action === "create") {
     if (!validateEmptyField(modalFields.$input)) {
+      isValid = false;;
+    }
+    if (!validateEmptyField(modalFields.$priority)) {
+      isValid = false;;
+    }
+
+    if (!isValid) {
       return;
     }
+
     createTask({task: modalFields.$input.value, priority: modalFields.$priority.value}, tasks);
   } else if (action === "edit") {
     const item = findTaskById(taskIdInput.value, tasks);
@@ -56,11 +67,14 @@ $form.addEventListener("submit", function (e) {
   handleCloseModal($modal);
 });
 
-modalFields.$input.addEventListener("input", function() {
-  if(modalFields.$input.value !== "") {
-    modalFields.$input.classList.remove("error")
-  }
-})
+[modalFields.$input, modalFields.$priority].forEach(field => {
+  field.addEventListener("input", function() {
+    if (field.value !== "") {
+      field.classList.remove("error");
+    }
+  });
+});
+
 
 $list.addEventListener("click", (e) => {
   const taskElement = e.target.closest("li");
