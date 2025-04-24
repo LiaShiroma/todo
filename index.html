@@ -37,30 +37,33 @@
     </div>
 
     <div id="modal-create" class="modal">
-
       <div class="modal-content">
         <span id="close" class="close">
           <i class="fa-solid fa-circle-xmark"></i>
         </span>
         <form action="" id="tasks-form">
           <h2 class="modal-title">New task</h2>
-            <input type="hidden" name="task-id">
-            <input
-              type="text"
-              id="task"
-              name="task"
-              placeholder="Task title"
-            />
-            <select name="priority" id="priority" required>
-              <option value="" disabled selected>Priority</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
-            <button class="btn-create" id="btn-save" type="submit" data-action="create">Save</button>
+          <input type="hidden" name="task-id" />
+          <div class="input-container">
+            <input type="text" id="task" name="task" placeholder="Task title" />
+            <span class="error-message">Campo obrigatório*</span>
+          </div>
+          <select name="priority" id="priority" required>
+            <option value="" disabled selected>Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <button
+            class="btn-create"
+            id="btn-save"
+            type="submit"
+            data-action="create"
+          >
+            Save
+          </button>
         </form>
       </div>
-    
     </div>
 
     <script type="module" src="/assets/js/script.js"></script>

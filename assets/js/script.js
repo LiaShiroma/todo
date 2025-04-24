@@ -56,6 +56,12 @@ $form.addEventListener("submit", function (e) {
   handleCloseModal($modal);
 });
 
+modalFields.$input.addEventListener("input", function() {
+  if(modalFields.$input.value !== "") {
+    modalFields.$input.classList.remove("error")
+  }
+})
+
 $list.addEventListener("click", (e) => {
   const taskElement = e.target.closest("li");
   if (e.target.closest(".btn-delete")) {

@@ -46,7 +46,7 @@ export function handleFilterTasks(button, tasks, $list) {
 
 export function filterTasksByStatus(tasks, status) {
   if (status === "all") return tasks;
-  
+
   return tasks.filter((task) => {
     return status === "completed" ? task.status : !task.status;
   });
@@ -81,33 +81,40 @@ export function removeTaskFromDOM(task) {
   task.remove();
 }
 
-export function setupModal(mode, task = null, taskIdInput = null, tasks, $btnModal, modalFields, $modal, $modalTitle) {
+export function setupModal(
+  mode,
+  task = null,
+  taskIdInput = null,
+  tasks,
+  $btnModal,
+  modalFields,
+  $modal,
+  $modalTitle
+) {
   const title = mode === "edit" ? "Edit task" : "Create task";
 
-  setModalTitle(title, $modalTitle)
+  setModalTitle(title, $modalTitle);
 
   $btnModal.setAttribute("data-action", mode);
 
-  if(mode === "create") {
+  if (mode === "create") {
     resetFormFields([modalFields.$input, modalFields.$priority]);
   }
-  if(mode === "edit") {
+  if (mode === "edit") {
     populateModalFields(task, tasks, taskIdInput, modalFields);
-    
   }
 
-  handleOpenModal($modal);  
-
+  handleOpenModal($modal);
 }
 
 function populateModalFields(task, tasks, taskIdInput, modalFields) {
   const id = parseInt(task.getAttribute("data-id"));
 
   const item = findTaskById(id, tasks);
-    if (!item) return;
-  
+  if (!item) return;
+
   taskIdInput.value = id;
 
-  modalFields.$input.value = item.task; 
+  modalFields.$input.value = item.task;
   modalFields.$priority.value = item.priority;
 }
