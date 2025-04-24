@@ -135,3 +135,20 @@ export function showToast(message) {
     
   }, 3000)
 }
+export function updateTaskCount(tasks, $pending, $completed) {
+  const { pending, completed } = tasks.reduce(
+    (acc, task) => {
+      if (task.status === false) {
+        acc.pending += 1; 
+      } else {
+        acc.completed += 1;
+      }
+      return acc;  
+    },
+    { pending: 0, completed: 0 }  
+  );
+
+
+  $pending.textContent = pending;
+  $completed.textContent = completed;
+}

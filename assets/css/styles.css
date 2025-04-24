@@ -357,3 +357,15 @@ select {
     transform: translateY(0);
   }
 }
+
+.tasks-info {
+  font-size: 14px;
+}
+
+.tasks-info span {
+  font-weight: bold;
+}
+
+.tasks-info i {
+  color: #f26e54;
+}

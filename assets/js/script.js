@@ -11,6 +11,8 @@ const modalFields = {
   $input: document.getElementById("task"),
   $priority: document.getElementById("priority"),
 };
+const $pendingTasks = document.getElementById("pending")
+const $completedTasks = document.getElementById("completed")
 
 import {
   loadTasksFromLocalStorage,
@@ -33,10 +35,13 @@ import {
   removeTaskFromDOM,
   setupModal,
   showToast,
+  updateTaskCount
 } from "./taskView.js";
 
 let tasks = loadTasksFromLocalStorage();
 renderTaskList(tasks, $list);
+
+updateTaskCount(tasks, $pendingTasks, $completedTasks)
 
 $form.addEventListener("submit", function (e) {
   e.preventDefault();
@@ -64,6 +69,7 @@ $form.addEventListener("submit", function (e) {
       tasks
     );
     showToast("Task created successfully!");
+    updateTaskCount(tasks, $pendingTasks, $completedTasks)
   } else if (action === "edit") {
     const item = findTaskById(taskIdInput.value, tasks);
 
@@ -92,9 +98,10 @@ $form.addEventListener("submit", function (e) {
 $list.addEventListener("click", (e) => {
   const taskElement = e.target.closest("li");
   if (e.target.closest(".btn-delete")) {
-    deleteTaskById(taskElement, tasks);
+    tasks = deleteTaskById(taskElement, tasks); 
     removeTaskFromDOM(taskElement);
-    showToast("Task deleted successfully!")
+    showToast("Task deleted successfully!");
+    updateTaskCount(tasks, $pendingTasks, $completedTasks);
   }
   if (e.target.closest(".btn-edit")) {
     setupModal(
@@ -112,6 +119,7 @@ $list.addEventListener("click", (e) => {
     toggleStatus(e.target, tasks);
     const activeFilter = getActiveFilterButton(btnFilter);
     handleFilterTasks(activeFilter, tasks, $list);
+    updateTaskCount(tasks, $pendingTasks, $completedTasks)
   }
 });
 

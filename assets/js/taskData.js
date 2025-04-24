@@ -22,10 +22,12 @@ export function findTaskById(id, tasks) {
 }
 
 export function deleteTaskById (task, tasks) {
-  tasks = tasks.filter(
+  const updatedTasks = tasks.filter(
     (item) => parseInt(item.id) !== parseInt(task.getAttribute("data-id"))
   );
   saveTasksToLocalStorage(tasks);
+
+  return updatedTasks;
 }
 
 export function toggleStatus(task, tasks) {
