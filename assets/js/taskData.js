@@ -9,9 +9,11 @@ export function createTask(taskData, tasks) {
   });
 }
 
-export function updateTask(task, $input, $priority) {
-  task.task = $input.value;
-  task.priority = $priority.value;
+export function updateTask(task, updatedData) {
+  console.log({task, updatedData});
+  
+  task.task = updatedData.task;
+  task.priority = updatedData.priority;
   task.status = false;
 }
 
@@ -19,8 +21,7 @@ export function findTaskById(id, tasks) {
   return tasks.find((item) => parseInt(item.id) === parseInt(id));
 }
 
-export function handleDeleteTask(task, tasks) {
-  task.remove();
+export function deleteTaskById (task, tasks) {
   tasks = tasks.filter(
     (item) => parseInt(item.id) !== parseInt(task.getAttribute("data-id"))
   );
@@ -28,7 +29,7 @@ export function handleDeleteTask(task, tasks) {
 }
 
 export function toggleStatus(task, tasks) {
-  const id = task.getAttribute("data-id");
+  const id = parseInt(task.getAttribute("data-id"));
   const item = findTaskById(id, tasks);
   if (item) {
     item.status = !item.status;

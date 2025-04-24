@@ -1,25 +1,22 @@
 import { findTaskById } from "./taskData.js";
 
-export function handleCreateHTMLList(tasks, element) {
-  element.innerHTML = "";
-  tasks.forEach((item) => {
-    element.insertAdjacentHTML(
-      "afterbegin",
-      `<li data-id="${item.id}" class="${
-        item.status ? "finished" : "unfinished"
-      }">
-		  <p>${item.task}</p>
-		  <span class="date">• ${item.date}</span>
-		  <span class="priority-${item.priority}"> • ${item.priority}</span>
+export function buildTask(task) {
+  const li = document.createElement("li");
+  li.classList.add(task.status ? "finished" : "unfinished");
+  li.setAttribute("data-id", `${task.id}`);
+  li.innerHTML = `
+ <p>${task.task}</p>
+		  <span class="date">• ${task.date}</span>
+		  <span class="priority-${task.priority}"> • ${task.priority}</span>
 		  <button class="btn-edit">
 			<i class="fa-solid fa-pen"></i>
 		  </button>
 		  <button class="btn-delete">
 			<i class="fa-solid fa-trash"></i>
-		  </button>
-	  </li>`
-    );
-  });
+		  </button> 
+  `;
+
+  return li;
 }
 
 export function renderTaskList(tasks, $list) {
@@ -27,7 +24,12 @@ export function renderTaskList(tasks, $list) {
     $list.innerHTML = "<p>There is no tasks yet!</p>";
     return;
   }
-  handleCreateHTMLList(tasks, $list);
+
+  $list.innerHTML = "";
+  tasks.forEach((task) => {
+    const taskElement = buildTask(task);
+    $list.insertBefore(taskElement, $list.firstChild);
+  });
 }
 
 export function getActiveFilterButton(btnFilter) {
@@ -38,14 +40,16 @@ export function getActiveFilterButton(btnFilter) {
 
 export function handleFilterTasks(button, tasks, $list) {
   const status = button.getAttribute("data-filter");
-  const validStatuses = ["all", "pending", "completed"];
-  if (!validStatuses.includes(status) || status === "all") {
-    return renderTaskList(tasks, $list);
-  }
-  const filteredList = tasks.filter((task) => {
+  const filteredList = filterTasksByStatus(tasks, status);
+  renderTaskList(filteredList, $list);
+}
+
+export function filterTasksByStatus(tasks, status) {
+  if (status === "all") return tasks;
+  
+  return tasks.filter((task) => {
     return status === "completed" ? task.status : !task.status;
   });
-  renderTaskList(filteredList, $list);
 }
 
 export function setModalTitle(title, $modalTitle) {
@@ -73,31 +77,37 @@ export function handleCloseModal($modal) {
   $modal.classList.remove("show");
 }
 
-export function initializeTaskModal(
-  mode,
-  task = null,
-  $btnSave,
-  $input,
-  $priority,
-  taskIdInput,
-  $modalTitle
-) {
-  setModalTitle(mode === "edit" ? "Edit task" : "Create task", $modalTitle);
-  $btnSave.setAttribute("data-action", mode);
-  if (mode === "edit" && task) {
-    $input.value = task.task;
-    $priority.value = task.priority;
-    taskIdInput.value = task.id;
-  } else {
-    resetFormFields([$input, $priority, taskIdInput]);
-  }
+export function removeTaskFromDOM(task) {
+  task.remove();
 }
 
-export function openEditModal(task, $modal, taskIdInput, tasks, $btnSave, $input, $priority, $modalTitle) {
-  handleOpenModal($modal);
-  const id = task.getAttribute("data-id");
+export function setupModal(mode, task = null, taskIdInput = null, tasks, $btnModal, modalFields, $modal, $modalTitle) {
+  const title = mode === "edit" ? "Edit task" : "Create task";
+
+  setModalTitle(title, $modalTitle)
+
+  $btnModal.setAttribute("data-action", mode);
+
+  if(mode === "create") {
+    resetFormFields([modalFields.$input, modalFields.$priority]);
+  }
+  if(mode === "edit") {
+    populateModalFields(task, tasks, taskIdInput, modalFields);
+    
+  }
+
+  handleOpenModal($modal);  
+
+}
+
+function populateModalFields(task, tasks, taskIdInput, modalFields) {
+  const id = parseInt(task.getAttribute("data-id"));
+
+  const item = findTaskById(id, tasks);
+    if (!item) return;
+  
   taskIdInput.value = id;
-  const item = findTaskById(parseInt(id), tasks);
-  if (!item) return;
-  initializeTaskModal("edit", item, $btnSave, $input, $priority, taskIdInput, $modalTitle);
+
+  modalFields.$input.value = item.task; 
+  modalFields.$priority.value = item.priority;
 }

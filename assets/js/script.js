@@ -1,29 +1,32 @@
 const $form = document.getElementById("tasks-form");
 const $list = document.getElementById("tasks-list");
 const $modal = document.getElementById("modal-create");
-const $btnModal = document.getElementById("btn-open-modal");
+const $btnOpenModal = document.getElementById("btn-open-modal");
 const $handleCloseModal = document.getElementById("close");
 const $modalTitle = document.querySelector(".modal-title");
 const btnFilter = document.querySelectorAll(".filters button");
-const $input = document.getElementById("task");
-const $priority = document.getElementById("priority");
-const $btnSave = document.getElementById("btn-save");
+const $btnModal = document.getElementById("btn-save");
 const taskIdInput = document.querySelector("input[name='task-id']");
+const modalFields = {
+  $input: document.getElementById("task"),
+  $priority: document.getElementById("priority")
+}
+
+
 import {
   loadTasksFromLocalStorage,
   saveTasksToLocalStorage,
 } from "./taskStorage.js";
-import { createTask, updateTask, findTaskById, toggleStatus, handleDeleteTask } from "./taskData.js";
+import { createTask, updateTask, findTaskById, toggleStatus, deleteTaskById  } from "./taskData.js";
 import {
   renderTaskList,
   handleFilterTasks,
   validateEmptyField,
-  handleOpenModal,
   handleCloseModal,
-  initializeTaskModal,
-  openEditModal,
   getActiveFilterButton,
-  resetFormFields
+  resetFormFields,
+  removeTaskFromDOM,
+  setupModal
 } from "./taskView.js";
 
 let tasks = loadTasksFromLocalStorage();
@@ -31,22 +34,23 @@ renderTaskList(tasks, $list);
 
 $form.addEventListener("submit", function (e) {
   e.preventDefault();
-  const action = $btnSave.getAttribute("data-action");
+  const action = $btnModal.getAttribute("data-action");
   if (!action) {
     return;
   }
   if (action === "create") {
-    if (!validateEmptyField($input)) {
+    if (!validateEmptyField(modalFields.$input)) {
       return;
     }
-    createTask({ task: $input.value, priority: $priority.value }, tasks);
+    createTask({task: modalFields.$input.value, priority: modalFields.$priority.value}, tasks);
   } else if (action === "edit") {
     const item = findTaskById(taskIdInput.value, tasks);
+    
     if (item) {
-      updateTask(item, $input, $priority);
+      updateTask(item, {task: modalFields.$input.value, priority: modalFields.$priority.value});
     }
   }
-  resetFormFields([$input, $priority, taskIdInput]);
+  resetFormFields([modalFields.$input, modalFields.$priority, taskIdInput]);
   saveTasksToLocalStorage(tasks);
   renderTaskList(tasks, $list);
   handleCloseModal($modal);
@@ -55,15 +59,16 @@ $form.addEventListener("submit", function (e) {
 $list.addEventListener("click", (e) => {
   const taskElement = e.target.closest("li");
   if (e.target.closest(".btn-delete")) {
-    handleDeleteTask(taskElement, tasks);
+    deleteTaskById (taskElement, tasks);
+    removeTaskFromDOM(taskElement);
   }
   if (e.target.closest(".btn-edit")) {
-    openEditModal(taskElement, $modal, taskIdInput, tasks, $btnSave, $input, $priority, $modalTitle)
+    setupModal("edit", taskElement, taskIdInput, tasks, $btnModal, modalFields, $modal, $modalTitle)
   }
   if (e.target.matches("li")) {
     toggleStatus(e.target, tasks);
     const activeFilter = getActiveFilterButton(btnFilter);
-    activeFilter ? handleFilterTasks(activeFilter, tasks, $list) : renderTaskList(tasks, $list);
+    handleFilterTasks(activeFilter, tasks, $list)
   }
 });
 
@@ -76,10 +81,8 @@ btnFilter.forEach((btn) => {
 });
 
 
-$btnModal.addEventListener("click", function () {
-  handleOpenModal($modal);
-  initializeTaskModal("create", null, $btnSave, $input, $priority, taskIdInput, $modalTitle);
-  
+$btnOpenModal.addEventListener("click", function () {
+  setupModal("create", null, null, tasks, $btnModal, modalFields, $modal, $modalTitle)
   
 });
 
