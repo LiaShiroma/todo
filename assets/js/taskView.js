@@ -98,9 +98,11 @@ export function setupModal(
   $btnModal.setAttribute("data-action", mode);
 
   if (mode === "create") {
+    $btnModal.textContent = "Create Task";
     resetFormFields([modalFields.$input, modalFields.$priority]);
   }
   if (mode === "edit") {
+    $btnModal.textContent = "Save Changes";
     populateModalFields(task, tasks, taskIdInput, modalFields);
   }
 
