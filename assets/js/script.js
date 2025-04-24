@@ -9,15 +9,20 @@ const $btnModal = document.getElementById("btn-save");
 const taskIdInput = document.querySelector("input[name='task-id']");
 const modalFields = {
   $input: document.getElementById("task"),
-  $priority: document.getElementById("priority")
-}
-
+  $priority: document.getElementById("priority"),
+};
 
 import {
   loadTasksFromLocalStorage,
   saveTasksToLocalStorage,
 } from "./taskStorage.js";
-import { createTask, updateTask, findTaskById, toggleStatus, deleteTaskById  } from "./taskData.js";
+import {
+  createTask,
+  updateTask,
+  findTaskById,
+  toggleStatus,
+  deleteTaskById,
+} from "./taskData.js";
 import {
   renderTaskList,
   handleFilterTasks,
@@ -26,7 +31,8 @@ import {
   getActiveFilterButton,
   resetFormFields,
   removeTaskFromDOM,
-  setupModal
+  setupModal,
+  showToast,
 } from "./taskView.js";
 
 let tasks = loadTasksFromLocalStorage();
@@ -43,22 +49,30 @@ $form.addEventListener("submit", function (e) {
 
   if (action === "create") {
     if (!validateEmptyField(modalFields.$input)) {
-      isValid = false;;
+      isValid = false;
     }
     if (!validateEmptyField(modalFields.$priority)) {
-      isValid = false;;
+      isValid = false;
     }
 
     if (!isValid) {
       return;
     }
 
-    createTask({task: modalFields.$input.value, priority: modalFields.$priority.value}, tasks);
+    createTask(
+      { task: modalFields.$input.value, priority: modalFields.$priority.value },
+      tasks
+    );
+    showToast("Task created successfully!");
   } else if (action === "edit") {
     const item = findTaskById(taskIdInput.value, tasks);
-    
+
     if (item) {
-      updateTask(item, {task: modalFields.$input.value, priority: modalFields.$priority.value});
+      updateTask(item, {
+        task: modalFields.$input.value,
+        priority: modalFields.$priority.value,
+      });
+      showToast("Task updated successfully!");
     }
   }
   resetFormFields([modalFields.$input, modalFields.$priority, taskIdInput]);
@@ -67,28 +81,37 @@ $form.addEventListener("submit", function (e) {
   handleCloseModal($modal);
 });
 
-[modalFields.$input, modalFields.$priority].forEach(field => {
-  field.addEventListener("input", function() {
+[modalFields.$input, modalFields.$priority].forEach((field) => {
+  field.addEventListener("input", function () {
     if (field.value !== "") {
       field.classList.remove("error");
     }
   });
 });
 
-
 $list.addEventListener("click", (e) => {
   const taskElement = e.target.closest("li");
   if (e.target.closest(".btn-delete")) {
-    deleteTaskById (taskElement, tasks);
+    deleteTaskById(taskElement, tasks);
     removeTaskFromDOM(taskElement);
+    showToast("Task deleted successfully!")
   }
   if (e.target.closest(".btn-edit")) {
-    setupModal("edit", taskElement, taskIdInput, tasks, $btnModal, modalFields, $modal, $modalTitle)
+    setupModal(
+      "edit",
+      taskElement,
+      taskIdInput,
+      tasks,
+      $btnModal,
+      modalFields,
+      $modal,
+      $modalTitle
+    );
   }
   if (e.target.matches("li")) {
     toggleStatus(e.target, tasks);
     const activeFilter = getActiveFilterButton(btnFilter);
-    handleFilterTasks(activeFilter, tasks, $list)
+    handleFilterTasks(activeFilter, tasks, $list);
   }
 });
 
@@ -100,15 +123,22 @@ btnFilter.forEach((btn) => {
   });
 });
 
-
 $btnOpenModal.addEventListener("click", function () {
-  setupModal("create", null, null, tasks, $btnModal, modalFields, $modal, $modalTitle)
-  
+  setupModal(
+    "create",
+    null,
+    null,
+    tasks,
+    $btnModal,
+    modalFields,
+    $modal,
+    $modalTitle
+  );
 });
 
 $btnCloseModal.addEventListener("click", function () {
-  handleCloseModal($modal)
-})
+  handleCloseModal($modal);
+});
 
 window.onclick = function (event) {
   if (event.target === $modal) {

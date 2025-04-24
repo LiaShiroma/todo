@@ -319,3 +319,41 @@ select {
     opacity: 0;
   }
 }
+
+.toast-message {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  max-width: 300px;
+  background: #54c3c4;
+  border-radius: 4px;
+  padding: 8px;
+  opacity: 0;
+  transform: translateY(100%);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast-message p {
+  font-size: 14px;
+  margin: 0;
+
+}
+
+.toast-message.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  animation: fadeInBottom 0.3s ease forwards;
+}
+
+@keyframes fadeInBottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

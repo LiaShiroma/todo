@@ -118,3 +118,18 @@ function populateModalFields(task, tasks, taskIdInput, modalFields) {
   modalFields.$input.value = item.task;
   modalFields.$priority.value = item.priority;
 }
+
+export function showToast(message) {
+  const toast = document.createElement("div");
+  toast.classList.add("toast-message");
+  toast.innerHTML = `<p>${message}</p>`;
+  document.body.append(toast);
+
+  toast.classList.add("show");
+
+  setTimeout(function() {
+  toast.classList.remove("show");
+  document.body.removeChild(toast);
+    
+  }, 3000)
+}
