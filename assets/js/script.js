@@ -2,7 +2,7 @@ const $form = document.getElementById("tasks-form");
 const $list = document.getElementById("tasks-list");
 const $modal = document.getElementById("modal-create");
 const $btnOpenModal = document.getElementById("btn-open-modal");
-const $handleCloseModal = document.getElementById("close");
+const $btnCloseModal = document.getElementById("close");
 const $modalTitle = document.querySelector(".modal-title");
 const btnFilter = document.querySelectorAll(".filters button");
 const $btnModal = document.getElementById("btn-save");
@@ -105,6 +105,10 @@ $btnOpenModal.addEventListener("click", function () {
   setupModal("create", null, null, tasks, $btnModal, modalFields, $modal, $modalTitle)
   
 });
+
+$btnCloseModal.addEventListener("click", function () {
+  handleCloseModal($modal)
+})
 
 window.onclick = function (event) {
   if (event.target === $modal) {
